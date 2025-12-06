@@ -11,20 +11,19 @@ import { User } from "@/src/entities/auth/model/types";
 export default function MePage() {
     const router = useRouter();
     const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
-    const token = useSelector((state: RootState) => state.auth.accessToken) as string;
 
     const [user, setUser] = useState<User | null>(null);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        if (!isAuthenticated || !token) {
+        if (!isAuthenticated) {
             router.push("/login");
             return;
         }
 
         const loadUser = async () => {
             try {
-                const me = await fetchMe(token);
+                const me = await fetchMe();
                 setUser(me);
             } catch (error) {
                 console.error(error);
@@ -35,7 +34,7 @@ export default function MePage() {
         };
 
         loadUser();
-    }, [isAuthenticated, token, router]);
+    }, [isAuthenticated, router]);
 
     if (loading) return <div>Загрузка...</div>;
     if (!user) return <div>Пользователь не найден</div>;

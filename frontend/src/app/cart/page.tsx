@@ -86,7 +86,7 @@ export default function CartPage() {
                                         alt={item.name}
                                         fill
                                         sizes="(max-width: 768px) 100px, 100px"
-                                        style={{ 
+                                        style={{
                                             objectFit: "contain"
                                         }}
                                         className={styles.image}

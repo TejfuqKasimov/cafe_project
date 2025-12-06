@@ -1,11 +1,10 @@
 import { loginSchema } from '@/src/schemas/login';
-import { signJwt } from '@/src/utils/jwt';
+import { signJwt, generateRandomSession, hashSession } from '@/src/utils/jwt';
 import { prisma } from '@/prisma/connection';
 import bcrypt from 'bcryptjs';
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
 import { Role } from '@/src/enums/role';
-
 
 export async function POST(request: Request) {
 	try {
@@ -15,7 +14,8 @@ export async function POST(request: Request) {
 		if (!parsed.success) {
 			return NextResponse.json(
 				{ message: 'Invalid input', details: z.treeifyError(parsed.error) },
-				{ status: 400 });
+				{ status: 400 }
+			);
 		}
 
 		const { email, password } = parsed.data;
@@ -27,21 +27,50 @@ export async function POST(request: Request) {
 		}
 
 		const isMatch = await bcrypt.compare(password, user.password);
-
 		if (!isMatch) {
 			return NextResponse.json(
-				{ message: 'Incorrect email or password' }, { status: 401 });
+				{ message: 'Incorrect email or password' },
+				{ status: 401 }
+			);
 		}
+
+		const randomSession = generateRandomSession();
+		const sessionHash = hashSession(randomSession);
 
 		const access_token = signJwt({
 			id: user.id,
 			email: user.email,
 			role: user.role as Role,
+			sessionHash: sessionHash,
 		});
 
-		return NextResponse.json(
-			{ access_token: access_token, token_type: 'bearer' }, { status: 200 });
-	} catch (_) {
+		const response = NextResponse.json({ message: 'Login successfully.' });
+
+		response.cookies.set({
+			name: 'random_session',
+			value: randomSession,
+			httpOnly: true,
+			secure: true,
+			sameSite: 'none',
+			maxAge: 60 * 60,
+			path: '/',
+			domain: 'localhost',
+		});
+
+		response.cookies.set({
+			name: 'auth_token',
+			value: access_token,
+			httpOnly: true,
+			secure: true,
+			sameSite: 'none',
+			maxAge: 60 * 15,
+			path: '/',
+			domain: 'localhost',
+		});
+
+		return response;
+	} catch (err) {
+		console.error(err);
 		return NextResponse.json({ message: 'Internal server error' }, { status: 500 });
 	}
 }

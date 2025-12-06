@@ -6,17 +6,16 @@ import { makeStore, AppStore } from "../store";
 
 interface StoreProviderProps {
     children: ReactNode;
-    initialToken: string | null;
+    isAuthenticated: boolean;
 }
 
-export function StoreProvider({ children, initialToken }: StoreProviderProps) {
+export function StoreProvider({ children, isAuthenticated }: StoreProviderProps) {
     const storeRef = useRef<AppStore | null>(null);
 
     if (!storeRef.current) {
         storeRef.current = makeStore({
             auth: {
-                accessToken: initialToken,
-                isAuthenticated: !!initialToken,
+                isAuthenticated,
             },
         });
     }

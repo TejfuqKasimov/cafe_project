@@ -17,12 +17,10 @@ export default function RegisterPage() {
     };
 
     return (
-        <main>
-            <div style={{ maxWidth: 400, margin: "50px auto", textAlign: "center" }}>
-                <h1>Зарегистрироваться</h1>
-                <RegistrationForm onSubmit={onSubmit} />
-                <RegistrationStatus error={error} success={success} />
-            </div>
-        </main>
+        <div style={{ maxWidth: 400, margin: "50px auto", textAlign: "center" }}>
+            <h1>Зарегистрироваться</h1>
+            <RegistrationForm onSubmit={onSubmit} />
+            <RegistrationStatus error={error} success={success} />
+        </div>
     );
 }
