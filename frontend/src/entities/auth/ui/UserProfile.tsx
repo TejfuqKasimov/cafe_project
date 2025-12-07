@@ -4,23 +4,27 @@ import { useDispatch } from "react-redux";
 import { logout } from "../model/authSlice";
 import { User } from "../model/types";
 import styles from "./UserProfile.module.css";
+import { logoutUser } from "../lib/api";
 
 export function UserProfile({ user }: { user: User }) {
     const dispatch = useDispatch();
 
-    const handleLogout = () => {
+    const handleLogout = async () => {
         dispatch(logout());
 
-        if (typeof window !== "undefined") {
-            localStorage.removeItem("access_token");
-            document.cookie = `auth_token=; path=/; max-age=0; Secure=${process.env.NODE_ENV === "production"}; SameSite=Lax`;
-            window.location.href = "/login";
+        try {
+            const res = await logoutUser();
+            if (!res.success) {
+                throw new Error(res.message);
+            }
+        } catch (err) {
+            console.error("Logout error:", err);
         }
     };
 
     const handleTelegram = () => {
         window.location.href = `https://t.me/skufatorr_coffee_bot?start=${user.id}`
-    }
+    };
 
     return (
         <div className={styles.wrapper}>

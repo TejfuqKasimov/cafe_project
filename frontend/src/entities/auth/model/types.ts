@@ -12,7 +12,6 @@ export interface RegisterRequest {
 }
 
 export interface LoginResponse {
-    access_token: string;
     message?: string;
 }
 
@@ -27,5 +26,5 @@ export interface User {
 
 export interface UserResponse {
     message: string;
-    user: User;
+    user?: User;
 }
