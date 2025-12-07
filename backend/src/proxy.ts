@@ -9,6 +9,7 @@ const publicRoutes = [
 	prefix + '/products',
 	prefix + '/orders',
 	prefix + '/health_check',
+	prefix + '/telegram',
 ];
 
 function setCorsHeaders(res: NextResponse, origin: string) {
@@ -49,7 +50,7 @@ export async function proxy(request: NextRequest) {
 			origin
 		);
 	}
-	
+
 	const expectedHash = hashSession(randomSession);
 	if (expectedHash !== payload.sessionHash) {
 		return setCorsHeaders(
