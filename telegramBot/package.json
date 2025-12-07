@@ -14,20 +14,31 @@
     "test": "echo \"No tests yet\""
   },
   "dependencies": {
-    "telegraf": "^4.16.3",
     "dotenv": "^16.3.1",
+    "eslint-config-next": "^16.0.7",
+    "node-cache": "^5.1.2",
     "qrcode": "^1.5.3",
-    "node-cache": "^5.1.2"
+    "telegraf": "^4.16.3",
+    "typescript-formatter": "^7.2.2"
   },
   "devDependencies": {
+    "@eslint/js": "^9.39.1",
     "@types/node": "^20.8.0",
+    "@types/node-cache": "latest",
     "@types/qrcode": "^1.5.2",
-    "@types/node-cache": "^5.1.3",
-    "typescript": "^5.2.2",
+    "eslint": "^9.39.1",
+    "globals": "^16.5.0",
     "nodemon": "^3.0.1",
-    "ts-node": "^10.9.1"
+    "ts-node": "^10.9.1",
+    "typescript": "^5.2.2",
+    "typescript-eslint": "^8.48.1"
   },
-  "keywords": ["telegram", "bot", "coffee-shop", "telegraf"],
+  "keywords": [
+    "telegram",
+    "bot",
+    "coffee-shop",
+    "telegraf"
+  ],
   "author": "Your Name",
   "license": "MIT"
 }

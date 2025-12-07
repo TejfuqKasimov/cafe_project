@@ -6,9 +6,9 @@ class CacheService {
 
     constructor() {
         this.cache = new NodeCache({
-        stdTTL: 600, // 10 минут по умолчанию
-        checkperiod: 60,
-        useClones: false
+            stdTTL: 600, // 10 минут по умолчанию
+            checkperiod: 60,
+            useClones: false
         });
     }
 
@@ -16,7 +16,7 @@ class CacheService {
         if (ttl) {
             const success = this.cache.set(key, value, ttl);
             if (success) {
-            logger.debug(`Cache set: ${key}`);
+                logger.debug(`Cache set: ${key}`);
             }
             return success;
         }
@@ -26,9 +26,9 @@ class CacheService {
     get<T>(key: string): T | undefined {
         const value = this.cache.get<T>(key);
         if (value !== undefined) {
-        logger.debug(`Cache hit: ${key}`);
+            logger.debug(`Cache hit: ${key}`);
         } else {
-        logger.debug(`Cache miss: ${key}`);
+            logger.debug(`Cache miss: ${key}`);
         }
         return value;
     }
@@ -36,7 +36,7 @@ class CacheService {
     del(key: string): number {
         const deleted = this.cache.del(key);
         if (deleted > 0) {
-        logger.debug(`Cache deleted: ${key}`);
+            logger.debug(`Cache deleted: ${key}`);
         }
         return deleted;
     }
@@ -45,6 +45,6 @@ class CacheService {
         this.cache.flushAll();
         logger.info('Cache flushed');
     }
-    }
+}
 
 export const cache = new CacheService();
