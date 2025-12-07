@@ -8,7 +8,7 @@ export async function GET(request: NextRequest) {
 
 		if (!telegramId) {
 			return NextResponse.json(
-				{ error: 'Параметр telegramId обязателен' },
+				{ message: 'Параметр telegramId обязателен' },
 				{ status: 400 }
 			);
 		}
@@ -19,16 +19,18 @@ export async function GET(request: NextRequest) {
 
 		if (!card) {
 			return NextResponse.json(
-				{ error: 'Карта не найдена' },
+				{ message: 'Карта не найдена' },
 				{ status: 404 }
 			);
 		}
 
-		return NextResponse.json(card);
-	} catch (error) {
-		console.error('Ошибка при получении карты:', error);
 		return NextResponse.json(
-			{ error: 'Внутренняя ошибка сервера' },
+			{ userId: card.userId, amount: card.amount },
+			{ status: 200 }
+		);
+	} catch (_) {
+		return NextResponse.json(
+			{ message: 'Внутренняя ошибка сервера' },
 			{ status: 500 }
 		);
 	}
@@ -41,7 +43,7 @@ export async function POST(request: NextRequest) {
 
 		if (!telegramId) {
 			return NextResponse.json(
-				{ error: 'Поле telegramId обязательно' },
+				{ message: 'Поле telegramId обязательно' },
 				{ status: 400 }
 			);
 		}
@@ -52,12 +54,12 @@ export async function POST(request: NextRequest) {
 
 		if (existingCard) {
 			return NextResponse.json(
-				{ error: 'Карта с таким telegramId уже существует' },
+				{ message: 'Карта с таким telegramId уже существует' },
 				{ status: 409 }
 			);
 		}
 
-		const newCard = await prisma.loyaltyCard.create({
+		await prisma.loyaltyCard.create({
 			data: {
 				telegramId,
 				amount: 0,
@@ -66,16 +68,12 @@ export async function POST(request: NextRequest) {
 		});
 
 		return NextResponse.json(
-			{
-				message: 'Карта успешно создана',
-				card: newCard
-			},
+			{ message: 'Карта успешно создана' },
 			{ status: 201 }
 		);
-	} catch (error) {
-		console.error('Ошибка при создании карты:', error);
+	} catch {
 		return NextResponse.json(
-			{ error: 'Внутренняя ошибка сервера' },
+			{ message: 'Внутренняя ошибка сервера' },
 			{ status: 500 }
 		);
 	}
@@ -84,11 +82,11 @@ export async function POST(request: NextRequest) {
 export async function PUT(request: NextRequest) {
 	try {
 		const body = await request.json();
-		const { telegramId } = body;
+		const { telegramId, userId } = body;
 
-		if (!telegramId) {
+		if (!telegramId || !userId) {
 			return NextResponse.json(
-				{ error: 'Поле telegramId обязательно' },
+				{ message: 'Поля telegramId и userId обязательны' },
 				{ status: 400 }
 			);
 		}
@@ -99,24 +97,19 @@ export async function PUT(request: NextRequest) {
 
 		if (!card) {
 			return NextResponse.json(
-				{ error: 'Карта не найдена' },
+				{ message: 'Карта не найдена' },
 				{ status: 404 }
 			);
 		}
 
-		const userId = request.headers.get('x-user-id') as string;
-		if (!userId) {
-			return NextResponse.json({ message: 'Unauthorized request' }, { status: 401 });
-		}
-
 		if (card.userId && card.userId !== userId) {
 			return NextResponse.json(
-				{ error: 'Карта уже привязана к другому пользователю' },
+				{ message: 'Карта уже привязана к другому пользователю' },
 				{ status: 403 }
 			);
 		}
 
-		const updatedCard = await prisma.loyaltyCard.update({
+		await prisma.loyaltyCard.update({
 			where: { id: card.id },
 			data: {
 				userId: userId,
@@ -132,14 +125,13 @@ export async function PUT(request: NextRequest) {
 			},
 		});
 
-		return NextResponse.json({
-			message: 'Карта успешно привязана к вашему аккаунту',
-			card: updatedCard,
-		});
-	} catch (error) {
-		console.error('Ошибка при обновлении карты:', error);
 		return NextResponse.json(
-			{ error: 'Внутренняя ошибка сервера' },
+			{ message: 'Карта успешно привязана к вашему аккаунту' },
+			{ status: 200 }
+		);
+	} catch {
+		return NextResponse.json(
+			{ message: 'Внутренняя ошибка сервера' },
 			{ status: 500 }
 		);
 	}
