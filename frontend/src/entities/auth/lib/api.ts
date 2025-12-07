@@ -73,9 +73,8 @@ export async function logoutUser() {
             throw new Error(data.message || "Не удалось выйти из профиля");
         }
 
-        return { success: res.ok, message: data.message }
+        return { success: res.ok, message: data.message };
     } catch {
-        return { success: false, message: 'Ошибка сервера' }
-
+        return { success: false, message: 'Ошибка сервера' };
     }
 }

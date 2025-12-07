@@ -23,7 +23,7 @@ export function UserProfile({ user }: { user: User }) {
     };
 
     const handleTelegram = () => {
-        window.location.href = `https://t.me/skufatorr_coffee_bot?start=${user.id}`
+        window.location.href = `https://t.me/skufatorr_coffee_bot?start=${user.id}`;
     };
 
     return (

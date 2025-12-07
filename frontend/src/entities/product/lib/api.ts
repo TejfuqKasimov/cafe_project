@@ -1,5 +1,5 @@
 import apiConfig from "@/src/config/config";
-import { Product } from "../model/types"
+import { Product } from "../model/types";
 
 export async function fetchProducts(): Promise<Product[]> {
     const res = await fetch(`${apiConfig.baseUrl}/products`, {

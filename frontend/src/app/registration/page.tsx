@@ -8,8 +8,8 @@ import { registerUser } from "@/src/entities/auth/lib/api";
 
 export default function RegisterPage() {
     const router = useRouter();
-    const [error, setError] = useState("");
-    const [success, setSuccess] = useState("");
+    const [error] = useState("");
+    const [success] = useState("");
 
     const onSubmit = async (data: { name: string; email: string; password: string }) => {
         registerUser(data);

@@ -3,7 +3,7 @@
 import { useSelector, useDispatch } from "react-redux";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { RootState } from "@/src/shared/store/store";
 import {
     removeFromCart,
@@ -22,10 +22,10 @@ export default function CartPage() {
     const cart = useSelector((state: RootState) => state.cart);
     const { items, totalPrice, totalItems } = cart;
 
-    const [mounted, setMounted] = useState(false);
+    // const [mounted, setMounted] = useState(false);
 
     useEffect(() => {
-        setMounted(true);
+        // setMounted(true);
 
         if (typeof window !== "undefined") {
             const savedCart = loadCartFromLocalStorage();
@@ -33,7 +33,7 @@ export default function CartPage() {
         }
     }, [dispatch]);
 
-    if (!mounted) return null;
+    // if (!mounted) return null;
 
     if (!isAuthenticated) {
         return (
