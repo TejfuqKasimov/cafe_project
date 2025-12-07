@@ -11,22 +11,20 @@ export async function POST() {
 			name: "auth_token",
 			value: "",
 			httpOnly: true,
-			secure: true,
-			sameSite: "none",
+			secure: false,
+			sameSite: "lax",
 			maxAge: 0,
 			path: "/",
-			domain: "localhost",
 		});
 
 		response.cookies.set({
 			name: "random_session",
 			value: "",
 			httpOnly: true,
-			secure: true,
-			sameSite: "none",
+			secure: false,
+			sameSite: "lax",
 			maxAge: 0,
 			path: "/",
-			domain: "localhost",
 		});
 
 		return response;

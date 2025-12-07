@@ -1,9 +1,10 @@
 import { LoginResponse, RegisterRequest, RegisterResponse, UserResponse } from '../model/types';
+import apiConfig from '@/src/config/config';
 
 export const registerUser = async (req: RegisterRequest):
     Promise<{ success: boolean; message?: string }> => {
     try {
-        const res = await fetch('http://localhost:3000/api/v1/auth/register', {
+        const res = await fetch(`${apiConfig.baseUrl}/auth/register`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(req),
@@ -23,7 +24,7 @@ export const registerUser = async (req: RegisterRequest):
 export const loginUser = async (email: string, password: string):
     Promise<{ success: boolean; message?: string }> => {
     try {
-        const res = await fetch('http://localhost:3000/api/v1/auth/login', {
+        const res = await fetch(`${apiConfig.baseUrl}/auth/login`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email, password }),
@@ -39,7 +40,7 @@ export const loginUser = async (email: string, password: string):
 };
 
 export async function fetchMe() {
-    const response = await fetch('http://localhost:3000/api/v1/auth/me', {
+    const response = await fetch(`${apiConfig.baseUrl}/auth/me`, {
         method: "GET",
         cache: "no-store",
         credentials: "include",
@@ -61,7 +62,7 @@ export async function logoutUser() {
 
     try {
 
-        const res = await fetch("http://localhost:3000/api/v1/auth/logout", {
+        const res = await fetch(`${apiConfig.baseUrl}/auth/logout`, {
             method: "POST",
             credentials: "include",
         });

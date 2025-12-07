@@ -50,22 +50,20 @@ export async function POST(request: Request) {
 			name: 'random_session',
 			value: randomSession,
 			httpOnly: true,
-			secure: true,
-			sameSite: 'none',
+			secure: false,
+			sameSite: 'lax',
 			maxAge: 60 * 60,
 			path: '/',
-			domain: 'localhost',
 		});
 
 		response.cookies.set({
 			name: 'auth_token',
 			value: access_token,
 			httpOnly: true,
-			secure: true,
-			sameSite: 'none',
-			maxAge: 60 * 15,
+			secure: false,
+			sameSite: 'lax',
+			maxAge: 60 * 60,
 			path: '/',
-			domain: 'localhost',
 		});
 
 		return response;
