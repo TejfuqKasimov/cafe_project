@@ -51,8 +51,10 @@ export async function fetchMe() {
     if (!response.ok) {
         throw new Error(data.message || 'Не удалось загрузить профиль');
     }
-
-    return data.user!;
+    return {
+        user: data.user!,
+        loyaltyCard: data.card ?? null,
+    };
 }
 
 export async function logoutUser() {

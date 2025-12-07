@@ -11,8 +11,13 @@ export async function GET(request: Request) {
 		where: { id: userId },
 	});
 
+	const card = await prisma.loyaltyCard.findFirst({
+		where: { userId },
+	});
+
 	return NextResponse.json({
 		message: 'Authorized request',
 		user: user,
+		card: card,
 	}, { status: 200 });
 }

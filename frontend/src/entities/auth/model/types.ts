@@ -24,7 +24,12 @@ export interface User {
     createdAt: Date;
 }
 
+export interface LoyaltyCard {
+    id: string;
+}
+
 export interface UserResponse {
     message: string;
     user?: User;
+    card?: LoyaltyCard | null;
 }

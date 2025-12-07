@@ -6,13 +6,15 @@ import { useRouter } from "next/navigation";
 import { RootState } from "@/src/shared/store/store";
 import { fetchMe } from "@/src/entities/auth/lib/api";
 import { UserProfile } from "@/src/entities/auth/ui/UserProfile";
-import { User } from "@/src/entities/auth/model/types";
+import { LoyaltyCard, User } from "@/src/entities/auth/model/types";
 
 export default function MePage() {
     const router = useRouter();
     const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
 
     const [user, setUser] = useState<User | null>(null);
+    const [card, setCard] = useState<LoyaltyCard | null>(null);
+
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -24,7 +26,8 @@ export default function MePage() {
         const loadUser = async () => {
             try {
                 const me = await fetchMe();
-                setUser(me);
+                setUser(me.user);
+                setCard(me.loyaltyCard);
             } catch (error) {
                 console.error(error);
                 router.push("/login");
@@ -39,5 +42,5 @@ export default function MePage() {
     if (loading) return <div>Загрузка...</div>;
     if (!user) return <div>Пользователь не найден</div>;
 
-    return <UserProfile user={user} />;
+    return <UserProfile user={user} card={card} />;
 }
