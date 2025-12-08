@@ -2,6 +2,7 @@ import { updateProductSchema } from '@/src/schemas/product';
 import { prisma } from '@/prisma/connection';
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
+import { Role } from '@/src/enums/role';
 
 export async function GET(
 	_: Request, { params }: { params: Promise<{ id: string }> }) {
@@ -29,6 +30,14 @@ function capitalizeFirstLetter(str: string): string {
 export async function PUT(
 	request: Request, { params }: { params: Promise<{ id: string }> }) {
 	try {
+		const userRole = request.headers.get('x-user-role') as string;
+		if (userRole !== Role.ADMIN) {
+			return NextResponse.json(
+				{ message: 'Access Denied' },
+				{ status: 403 }
+			);
+		}
+
 		const { id } = await params;
 		const body = await request.json();
 		const parsed = updateProductSchema.safeParse(body);
@@ -70,8 +79,16 @@ export async function PUT(
 }
 
 export async function DELETE(
-	_: Request, { params }: { params: Promise<{ id: string }> }) {
+	request: Request, { params }: { params: Promise<{ id: string }> }) {
 	try {
+		const userRole = request.headers.get('x-user-role') as string;
+		if (userRole !== Role.ADMIN) {
+			return NextResponse.json(
+				{ message: 'Access Denied' },
+				{ status: 403 }
+			);
+		}
+		
 		const { id } = await params;
 
 		const existing = await prisma.product.findUnique({

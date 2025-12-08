@@ -2,6 +2,7 @@ import { createProductSchema } from '@/src/schemas/product';
 import { prisma } from '@/prisma/connection';
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
+import { Role } from '@/prisma/generated/enums';
 
 export async function GET() {
 	try {
@@ -20,6 +21,14 @@ function capitalizeFirstLetter(str: string): string {
 
 export async function POST(request: Request) {
 	try {
+		const userRole = request.headers.get('x-user-role') as string;
+		if (userRole !== Role.ADMIN) {
+			return NextResponse.json(
+				{ message: 'Access Denied' },
+				{ status: 403 }
+			);
+		}
+
 		const body = await request.json();
 		const parsed = createProductSchema.safeParse(body);
 

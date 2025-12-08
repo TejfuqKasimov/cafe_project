@@ -44,7 +44,12 @@ export async function POST(request: Request) {
 			sessionHash: sessionHash,
 		});
 
-		const response = NextResponse.json({ message: 'Login successfully.' });
+		const response = NextResponse.json(
+			{
+				message: 'Login successfully.',
+				role: user.role
+			}, { status: 200 }
+		);
 
 		response.cookies.set({
 			name: 'random_session',

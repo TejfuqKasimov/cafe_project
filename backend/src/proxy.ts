@@ -6,10 +6,10 @@ const prefix = '/api/v1';
 const publicRoutes = [
 	prefix + '/auth/login',
 	prefix + '/auth/register',
+	prefix + '/health_check',
 	prefix + '/products',
 	prefix + '/orders',
-	prefix + '/health_check',
-	prefix + '/telegram',
+	prefix + '/telegram/card', // ? Should be protected ?
 ];
 
 function setCorsHeaders(res: NextResponse, origin: string) {
@@ -30,7 +30,9 @@ export async function proxy(request: NextRequest) {
 	}
 
 	if (publicRoutes.some((r) => pathname.startsWith(r))) {
-		return setCorsHeaders(NextResponse.next(), origin);
+		if (request.method === 'GET' && pathname.startsWith(prefix + '/products')) {
+			return setCorsHeaders(NextResponse.next(), origin);
+		}
 	}
 
 	const token = request.cookies.get('auth_token')?.value;
