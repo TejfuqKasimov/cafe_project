@@ -13,7 +13,6 @@ export interface RegisterRequest {
 
 export interface LoginResponse {
     message?: string;
-    role?: Role;
 }
 
 export interface User {
