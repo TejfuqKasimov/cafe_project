@@ -1,5 +1,4 @@
-"use client";
-
+'use client';
 import { useRouter } from "next/navigation";
 import { useSelector, useDispatch } from "react-redux";
 import Image from "next/image";
@@ -7,6 +6,7 @@ import coffeePNG from "@/public/coffee.png";
 import { Product } from "../model/types";
 import { RootState } from "@/src/shared/store/store";
 import { addToCart } from "@/src/entities/cart/model/cartSlice";
+import QuantityControls from "@/src/entities/cart/ui/Quantity";
 import styles from "./ProductPage.module.css";
 
 export function ProductPageView({ product }: { product: Product }) {
@@ -16,9 +16,6 @@ export function ProductPageView({ product }: { product: Product }) {
     const cartItems = useSelector((state: RootState) => state.cart.items);
 
     const cartItem = cartItems.find(item => item.id === product.id);
-    const buttonText = cartItem
-        ? `В корзине (${cartItem.quantity})`
-        : "Добавить в корзину";
 
     const handleAddToCart = () => {
         if (!isAuthenticated) {
@@ -54,17 +51,30 @@ export function ProductPageView({ product }: { product: Product }) {
 
                     <div className={styles.price}>{product.price} ₽</div>
 
-                    <button
-                        onClick={handleAddToCart}
-                        className={styles.button}
-                    >
-                        {isAuthenticated ? buttonText : "Войти для добавления"}
-                    </button>
-
-                    {!isAuthenticated && (
-                        <p className={styles.authHint}>
-                            Требуется авторизация для добавления товаров в корзину
-                        </p>
+                    {cartItem && isAuthenticated ? (
+                        <div className={styles.inCartContainer}>
+                            <QuantityControls itemId={product.id} quantity={cartItem.quantity} />
+                            <button
+                                onClick={() => router.push('/cart')}
+                                className={styles.button}
+                            >
+                                В корзине
+                            </button>
+                        </div>
+                    ) : (
+                        <>
+                            <button
+                                onClick={handleAddToCart}
+                                className={styles.button}
+                            >
+                                {isAuthenticated ? "Добавить в корзину" : "Войти для добавления"}
+                            </button>
+                            {!isAuthenticated && (
+                                <p className={styles.authHint}>
+                                    Требуется авторизация для добавления товаров в корзину
+                                </p>
+                            )}
+                        </>
                     )}
                 </div>
             </div>
