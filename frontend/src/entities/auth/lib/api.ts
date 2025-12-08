@@ -1,3 +1,4 @@
+import { Role } from '@/src/shared/enums/role';
 import { LoginResponse, RegisterRequest, RegisterResponse, UserResponse } from '../model/types';
 import apiConfig from '@/src/config/config';
 
@@ -22,7 +23,7 @@ export const registerUser = async (req: RegisterRequest):
 };
 
 export const loginUser = async (email: string, password: string):
-    Promise<{ success: boolean; message?: string }> => {
+    Promise<{ success: boolean; message?: string ; role?: Role}> => {
     try {
         const res = await fetch(`${apiConfig.baseUrl}/auth/login`, {
             method: 'POST',
@@ -33,7 +34,7 @@ export const loginUser = async (email: string, password: string):
 
         const data: LoginResponse = await res.json();
 
-        return { success: res.ok, message: data.message };
+        return { success: res.ok, message: data.message, role: data.role};
     } catch {
         return { success: false, message: 'Ошибка сервера' };
     }

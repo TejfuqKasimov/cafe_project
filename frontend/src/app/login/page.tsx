@@ -22,7 +22,7 @@ export default function LoginPage() {
             setError(result.message || "Ошибка при логине");
             return;
         }
-        dispatch(setAuthenticated(true));
+        dispatch(setAuthenticated({isAuthenticated: true, role: result.role!}));
         router.push("/");
     };
 
