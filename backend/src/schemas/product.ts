@@ -7,4 +7,14 @@ export const createProductSchema = z.object({
 	price: z.string().regex(/^\d+(\.\d+)?$/, "Invalid decimal number"),
 });
 
-export const updateProductSchema = createProductSchema.partial();
+export const updateProductSchema = z.object({
+  productName: z.string().min(1),
+  name: z.string().min(1).optional(),
+  description: z.string().min(1).optional(),
+  volume: z.number().int().positive().optional(),
+  price: z.string().regex(/^\d+(\.\d+)?$/, "Invalid decimal number").optional(),
+});
+
+export const deleteProductSchema = z.object({
+  productName: z.string().min(1),
+});
