@@ -29,10 +29,12 @@ export async function proxy(request: NextRequest) {
 		return setCorsHeaders(new NextResponse(null, { status: 204 }), origin);
 	}
 
-	if (publicRoutes.some((r) => pathname.startsWith(r))) {
-		if (request.method === 'GET' && pathname.startsWith(prefix + '/products')) {
-			return setCorsHeaders(NextResponse.next(), origin);
-		}
+	if (publicRoutes
+		.filter((r) => r !== prefix + '/products')
+		.some((r) => pathname.startsWith(r)) ||
+		(request.method === 'GET' && pathname.startsWith(prefix + '/products'))
+	) {
+		return setCorsHeaders(NextResponse.next(), origin);
 	}
 
 	const token = request.cookies.get('auth_token')?.value;
