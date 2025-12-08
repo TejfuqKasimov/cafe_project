@@ -29,6 +29,15 @@ export async function POST(request: Request) {
 				{ status: 400 });
 		}
 
+		const products = await prisma.product.findUnique({
+			where: { name: parsed.data.name },
+		});
+
+		if (products) {
+			return NextResponse.json(
+				{ message: 'Item already exists' }, { status: 409 })
+		}
+
 		await prisma.product.create({
 			data: {
 				name: parsed.data.name.toLowerCase(),
